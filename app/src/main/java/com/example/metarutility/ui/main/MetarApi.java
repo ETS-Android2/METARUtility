@@ -58,7 +58,7 @@ public class MetarApi extends AsyncTask<String, Void, String> {
     }
 
     public JSONObject GetMetarInfo(String station) throws IOException, JSONException, ExecutionException, InterruptedException {
-        /*Pulling METAR information from API and formatting into a JSON String
+        /*GET METAR information from API and formatting into a JSON Object
          */
 
         String stationInfo = null;
@@ -66,8 +66,14 @@ public class MetarApi extends AsyncTask<String, Void, String> {
         String urlFormed = "https://avwx.rest/api/metar/" + station + "?format=json&token=" + authToken;
         stationInfo = execute(urlFormed).get();
 
-        //Convert String to JSONObject
-        JSONObject stationJson = new JSONObject(stationInfo);
+        //Convert String from AsyncTask background task to a JSONObject
+        JSONObject stationJson = null;
+        if (stationInfo != null) {
+            stationJson = new JSONObject(stationInfo);
+        }
+        else {
+            stationJson = null;
+        }
 
         return stationJson;
     }
@@ -75,6 +81,9 @@ public class MetarApi extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
+        /*Running the API get call via network on a separate thread to prevent
+            NetworkOnMainThreadException.
+         */
         String stringURL = params[0];
         String stationInfo = null;
         try {
@@ -100,6 +109,7 @@ public class MetarApi extends AsyncTask<String, Void, String> {
                 stationInfo = response.toString();
             } else {
                 System.out.println("Error Fetching Data");
+                stationInfo = null;
             }
         } catch (IOException e) {
             e.printStackTrace();

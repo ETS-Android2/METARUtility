@@ -105,8 +105,16 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
         MetarApi apiCall = new MetarApi();
         try {
             metarInfo = apiCall.GetMetarInfo(input);
-            String station = metarInfo.getString("station");
+            String station = null;
 
+            //if API call is not valid, metarInfo will be null
+            if (metarInfo != null) {
+                station = metarInfo.getString("station");
+            }
+            else {
+                System.out.println("ERROR bad ICAO Code");
+            }
+            
             System.out.println(station);
 
         } catch (IOException e) {
