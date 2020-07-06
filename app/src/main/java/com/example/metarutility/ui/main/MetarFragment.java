@@ -17,13 +17,17 @@ import org.json.JSONObject;
 import com.example.metarutility.R;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
+//Allow NetworkOnMainThreadException,
+import android.os.StrictMode;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link MetarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MetarFragment extends Fragment implements View.OnClickListener {
+public class MetarFragment<policy> extends Fragment implements View.OnClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,6 +40,8 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
 
     View view;
     EditText inputText;
+
+
 
     public MetarFragment() {
         // Required empty public constructor
@@ -106,6 +112,10 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
             e.printStackTrace();
         }
     }
