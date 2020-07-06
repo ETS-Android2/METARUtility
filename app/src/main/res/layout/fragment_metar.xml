@@ -8,7 +8,7 @@
     <!-- TODO: Update blank fragment layout -->
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/metarSearchButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -24,29 +24,33 @@
         android:layout_above="@+id/infoScroll"
         android:layout_below="@+id/searchInput"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="-52dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="-8dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:layout_toStartOf="@+id/button"
+        android:layout_toStartOf="@+id/metarSearchButton"
         android:hint="ICAO Code">
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/searchInput"
         android:layout_width="wrap_content"
         android:layout_height="60dp"
-        android:layout_above="@+id/infoScroll"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="6dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="7dp"
         android:layout_marginEnd="130dp"
-        android:layout_marginBottom="7dp"
-        android:hint="ICAO Code" />
+        android:digits="abcdefghijklmnopqrstuvwxyz"
+        android:hint="ICAO Code"
+        android:maxLength="4"
+        android:textAllCaps="true"
+        android:textStyle="bold" />
 
     <ScrollView
+        android:id="@+id/infoScroll"
         android:layout_width="412dp"
         android:layout_height="651dp"
         android:layout_below="@+id/searchInput"
@@ -54,14 +58,20 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="14dp"
         android:layout_marginEnd="0dp"
         android:layout_marginBottom="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/airportCodeView"
+                android:layout_width="match_parent"
+                android:layout_height="39dp"
+                android:text="TextView" />
 
             <TextView
                 android:id="@+id/airportNameView"

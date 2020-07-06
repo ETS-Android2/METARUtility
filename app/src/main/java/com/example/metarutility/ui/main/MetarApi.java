@@ -1,10 +1,14 @@
 package com.example.metarutility.ui.main;
 
+import android.os.AsyncTask;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MetarApi {
 
@@ -16,8 +20,10 @@ public class MetarApi {
 
     String authToken = "65H43GKqAoSvN89VGZ5WD-z26OpDn9PGCU3NMFHb3e4";
 
-    public String GetStationInfo(String station) throws IOException
-    {
+    public JSONObject GetStationInfo(String station) throws IOException, JSONException {
+        /*Pulling Airport information from API and formatting into a JSON String
+         */
+
         String stationInfo = null;
         // Format: https://avwx.rest/api/station/KLAX?format=json&token=65H43GKqAoSvN89VGZ5WD-z26OpDn9PGCU3NMFHb3e4
         String urlFormed = "https://avwx.rest/api/station/" + station + "?format=json&token=" + authToken;
@@ -40,11 +46,14 @@ public class MetarApi {
             System.out.println("Error Fetching Data");
         }
 
-        return stationInfo;
+        JSONObject stationJson = new JSONObject(stationInfo);
+        return stationJson;
     }
 
-    public String GetMetarInfo(String station) throws IOException
-    {
+    public JSONObject GetMetarInfo(String station) throws IOException, JSONException {
+        /*Pulling METAR information from API and formatting into a JSON String
+         */
+
         String stationInfo = null;
         //format: https://avwx.rest/api/metar/KLAX?format=json&token=65H43GKqAoSvN89VGZ5WD-z26OpDn9PGCU3NMFHb3e4
         String urlFormed = "https://avwx.rest/api/metar/" + station + "?format=json&token=" + authToken;
@@ -68,7 +77,10 @@ public class MetarApi {
             System.out.println("Error Fetching Data");
         }
 
-        return stationInfo;
+        JSONObject stationJson = new JSONObject(stationInfo);
+
+        return stationJson;
     }
+
 
 }
