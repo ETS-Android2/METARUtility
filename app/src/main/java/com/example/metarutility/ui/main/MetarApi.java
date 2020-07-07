@@ -27,33 +27,24 @@ public class MetarApi extends AsyncTask<String, Void, String> {
     public static final int READ_TIMEOUT = 15000;
     public static final int CONNECTION_TIMEOUT = 15000;
 
-    public JSONObject GetStationInfo(String station) throws IOException, JSONException {
+    public JSONObject GetStationInfo(String station) throws IOException, JSONException, ExecutionException, InterruptedException {
         /*Pulling Airport information from API and formatting into a JSON String
          */
 
         String stationInfo = null;
-        // Format: https://avwx.rest/api/station/KLAX?format=json&token=65H43GKqAoSvN89VGZ5WD-z26OpDn9PGCU3NMFHb3e4
+        //format: https://avwx.rest/api/metar/KLAX?format=json&token=65H43GKqAoSvN89VGZ5WD-z26OpDn9PGCU3NMFHb3e4
         String urlFormed = "https://avwx.rest/api/station/" + station + "?format=json&token=" + authToken;
-        URL getStationRequest = new URL(urlFormed);
+        stationInfo = new MetarApi().execute(urlFormed).get();
 
-        HttpURLConnection connection = (HttpURLConnection) getStationRequest.openConnection();
-        connection.setRequestMethod("GET");
-        int responseCode = connection.getResponseCode();
-
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream()));
-            StringBuffer response = new StringBuffer();
-            while ((stationInfo = in.readLine()) != null) {
-                response.append(stationInfo);
-            } in .close();
-
-            stationInfo = response.toString();
-        } else {
-            System.out.println("Error Fetching Data");
+        //Convert String from AsyncTask background task to a JSONObject
+        JSONObject stationJson = null;
+        if (stationInfo != null) {
+            stationJson = new JSONObject(stationInfo);
+        }
+        else {
+            stationJson = null;
         }
 
-        JSONObject stationJson = new JSONObject(stationInfo);
         return stationJson;
     }
 
@@ -64,7 +55,7 @@ public class MetarApi extends AsyncTask<String, Void, String> {
         String stationInfo = null;
         //format: https://avwx.rest/api/metar/KLAX?format=json&token=65H43GKqAoSvN89VGZ5WD-z26OpDn9PGCU3NMFHb3e4
         String urlFormed = "https://avwx.rest/api/metar/" + station + "?format=json&token=" + authToken;
-        stationInfo = execute(urlFormed).get();
+        stationInfo = new MetarApi().execute(urlFormed).get();
 
         //Convert String from AsyncTask background task to a JSONObject
         JSONObject stationJson = null;

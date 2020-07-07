@@ -1,5 +1,8 @@
 package com.example.metarutility.ui.main;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,9 +11,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,8 +25,9 @@ import com.example.metarutility.R;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
-//Allow NetworkOnMainThreadException,
-import android.os.StrictMode;
+import android.widget.TextView;
+
+import static androidx.core.content.ContextCompat.getSystemService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -93,8 +100,21 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
         */
     }
 
+    public static void hideSoftKeyboard(Activity activity) {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) activity.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                activity.getCurrentFocus().getWindowToken(), 0);
+    }
+
+    @SuppressLint("SetTextI18n")
     @Override
     public void onClick(View v) {
+
+        //hide keyboard upon button press
+        hideSoftKeyboard(getActivity());
+        
         System.out.println("Button clicked");
         Log.i("METARUtility", "Button Clicked");
 
@@ -102,20 +122,196 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
         String input = inputText.getText().toString();
 
         JSONObject metarInfo;
+        JSONObject stationInfo;
         MetarApi apiCall = new MetarApi();
         try {
             metarInfo = apiCall.GetMetarInfo(input);
-            String station = null;
+            stationInfo = apiCall.GetStationInfo(input);
+
+            //Setting up variables to load into TextView later
+            JSONObject timeObject;
+            JSONObject windSpeedObject;
+            JSONObject windDirectionObject;
+            JSONObject windGustObject = null;
+            JSONObject visibilityObject;
+            JSONArray rvrArray;
+            JSONArray wxArray;
+            JSONArray cloudArray;
+
+            String icaoCode = null;
+            String airportName = null;
+            String metar = null;
+            String time = null;
+            String flightRules = null;
+            String windSpeed = null;
+            String windDirection = null;
+            String gusts = null;
+            String gustCheck = null;
+            String visibility = null;
+            String rvrText = "";
+            String wxText = "";
+            String cloudText = "";
+            String cloudType = null;
+            String cloudHeight = null;
+
+            TextView airportNameTextView = view.findViewById(R.id.airportNameTextView);
 
             //if API call is not valid, metarInfo will be null
-            if (metarInfo != null) {
-                station = metarInfo.getString("station");
+            if (metarInfo != null && stationInfo != null) {
+
+                //for nested JSON values
+                windSpeedObject = metarInfo.getJSONObject("wind_speed");
+                timeObject = metarInfo.getJSONObject("time");
+                windDirectionObject = metarInfo.getJSONObject("wind_direction");
+                visibilityObject = metarInfo.getJSONObject("visibility");
+                
+                //this JSONObject can be null. Must check if it is null
+                gustCheck = metarInfo.getString("wind_gust");
+
+                if (gustCheck == "null") {
+                    gusts = null;
+                }
+                else {
+                    windGustObject = metarInfo.getJSONObject("wind_gust");
+                }
+
+                //Setting variable values from API
+                icaoCode = metarInfo.getString("station");
+                airportName = stationInfo.getString("name");
+                metar = metarInfo.getString("sanitized");
+                time = timeObject.getString("dt");
+                flightRules = metarInfo.getString("flight_rules");
+                windSpeed = windSpeedObject.getString("repr");
+                windDirection = windDirectionObject.getString("repr");
+                visibility = visibilityObject.getString("repr");
+                rvrArray = metarInfo.getJSONArray("runway_visibility");
+                wxArray = metarInfo.getJSONArray("wx_codes");
+                cloudArray = metarInfo.getJSONArray("clouds");
+
+                //check to see if windGustObject is not null to prevent error
+                if (windGustObject != null) {
+                    gusts = windGustObject.getString("repr");
+                }
+                else {
+                    gusts = null;
+                }
+
+                //Setting up TextViews
+                TextView metarTextView = view.findViewById(R.id.metarTextView);
+                TextView timeTextView = view.findViewById(R.id.timeTextView);
+                TextView flightRuleTextView = view.findViewById(R.id.flightRuleTextView);
+                TextView reportModifierTextView = view.findViewById(R.id.reportModifierTextView);
+                TextView windInfoTextView = view.findViewById(R.id.windInfoTextView);
+                TextView visibilityTextView = view.findViewById(R.id.visibilityTextView);
+                TextView rvrTextView = view.findViewById(R.id.rvrTextView);
+                TextView wxTextView = view.findViewById(R.id.wxTextView);
+                TextView cloudTextView = view.findViewById(R.id.cloudTextView);
+
+                //Filling TextViews with API information
+                airportNameTextView.setText(icaoCode + " - " + airportName);
+                metarTextView.setText(metar);
+                timeTextView.setText("Time: " + time +"\n ");
+                flightRuleTextView.setText("Flight Rules: " + flightRules + "\n ");
+                if (visibility.equals("CAVOK")) {
+                    visibilityTextView.setText("CAVOK - Ceiling and Visibility OK\n" +
+                            "Visibility greater than 10 km " +
+                            "\nNo clouds of operational significance \n ");
+                }
+                else {
+                    visibilityTextView.setText("Visibility: " + visibility + " Statute Miles");
+                }
+
+
+                //Formatting Wind Conditions in text view
+                if (windDirection.equals("VRB") && gusts == null) {
+                    windInfoTextView.setText("Winds variable at " + windSpeed +
+                            " knots. \nNo wind gusts.\n ");
+                }
+                else if (windDirection.equals("VRB") && gusts != null) {
+                    windInfoTextView.setText("Winds variable at "
+                            + windSpeed + " knots. \nGusts up to " + gusts + " knots.\n ");
+                }
+                else if (!windDirection.equals("VRB") && gusts == null) {
+                    windInfoTextView.setText("Winds at " + windSpeed +
+                            " knots from " + windDirection + " degrees. \nNo wind gusts.\n ");
+                }
+                else {
+                    windInfoTextView.setText("Winds at " + windSpeed +
+                            " knots from " + windDirection
+                            + " degrees. \nGusts up to " + gusts + " knots.\n ");
+                }
+
+                //check if RVR is empty.
+                if (rvrArray.length() == 0) {
+                    rvrTextView.setText("Runway Visual Range: No RVR Reported \n ");
+                }
+                else {
+                    for (int i = 0; i < rvrArray.length(); i++){
+                        rvrText = rvrText + (rvrArray.getString(i)) + "\n ";
+                    }
+                    rvrTextView.setText("Runway Visual Range: " +  rvrText);
+                }
+
+                //check if wxArray is empty
+                if (wxArray.length() == 0) {
+                    wxTextView.setText("No Weather Phenomena Reported \n ");
+                }
+                else {
+                    JSONObject wxObject;
+                    String stringContainer;
+                    for (int i = 0; i < wxArray.length(); i++){
+                        wxObject = wxArray.getJSONObject(i);
+                        stringContainer = wxObject.getString("value");
+                        wxText = wxText + stringContainer + "\n";
+                    }
+                    wxTextView.setText("Weather Conditions: \n" + wxText);
+                }
+
+                //check if cloudArray is empty
+                if (cloudArray.length() == 0) {
+                    cloudTextView.setText("No Clouds Reported");
+                }
+                else {
+                    JSONObject cloudObject;
+                    for (int i = 0; i < cloudArray.length(); i++) {
+                        cloudObject = cloudArray.getJSONObject(i);
+                        cloudType = cloudObject.getString("type");
+                        cloudHeight = cloudObject.getString("altitude");
+
+                        if (cloudType == "CLR") {
+                            cloudText = cloudText + "No clouds detected below 12000 feet \n";
+                        }
+                        else if (cloudType.equals("SCT")) {
+                            cloudText = cloudText + "Scattered clouds at "
+                                    + cloudHeight + "00 feet\n";
+                        }
+                        else if (cloudType.equals("FEW")) {
+                            cloudText = cloudText + "Few clouds at " + cloudHeight + "00 feet\n";
+                        }
+                        else if (cloudType.equals("BKN")) {
+                            cloudText = cloudText + "Broken clouds at "
+                                    + cloudHeight + "00 feet\n";
+                        }
+                        else if (cloudType.equals("OVC")) {
+                            cloudText = cloudText + "Overcast at " + cloudHeight + "00 feet\n";
+                        }
+                        else if (cloudType.equals("VV")) {
+                            cloudText = cloudText + "Vertical Visibility at "
+                                    + cloudHeight + "00 feet\n";
+                        }
+
+                    }
+                    //print to cloudTextView:
+                    cloudTextView.setText("Cloud Conditions: \n" + cloudText);
+
+                }
+
             }
             else {
                 System.out.println("ERROR bad ICAO Code");
+                airportNameTextView.setText("Error: ICAO Code is invalid. Please try again.");
+
             }
-            
-            System.out.println(station);
 
         } catch (IOException e) {
             e.printStackTrace();
