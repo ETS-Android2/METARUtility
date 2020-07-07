@@ -2,7 +2,6 @@ package com.example.metarutility.ui.main;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,13 +25,6 @@ import java.util.concurrent.ExecutionException;
 
 import android.widget.TextView;
 
-import static androidx.core.content.ContextCompat.getSystemService;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MetarFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MetarFragment<policy> extends Fragment implements View.OnClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -47,8 +38,6 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
 
     View view;
     EditText inputText;
-
-
 
     public MetarFragment() {
         // Required empty public constructor
@@ -134,6 +123,11 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
             JSONObject windDirectionObject;
             JSONObject windGustObject = null;
             JSONObject visibilityObject;
+            JSONObject temperatureObject;
+            JSONObject dewpointObject;
+            JSONObject altimeterObject;
+            JSONObject unitsObject;
+
             JSONArray rvrArray;
             JSONArray wxArray;
             JSONArray cloudArray;
@@ -153,6 +147,12 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
             String cloudText = "";
             String cloudType = null;
             String cloudHeight = null;
+            String dewpoint = null;
+            String temperature = null;
+            String altimeter = null;
+            String remarks = null;
+            String visibilityUnits = null;
+            String altimeterUnits = null;
 
             TextView airportNameTextView = view.findViewById(R.id.airportNameTextView);
 
@@ -164,6 +164,10 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
                 timeObject = metarInfo.getJSONObject("time");
                 windDirectionObject = metarInfo.getJSONObject("wind_direction");
                 visibilityObject = metarInfo.getJSONObject("visibility");
+                altimeterObject = metarInfo.getJSONObject("altimeter");
+                temperatureObject = metarInfo.getJSONObject("temperature");
+                dewpointObject = metarInfo.getJSONObject("dewpoint");
+                unitsObject = metarInfo.getJSONObject("units");
                 
                 //this JSONObject can be null. Must check if it is null
                 gustCheck = metarInfo.getString("wind_gust");
@@ -187,6 +191,12 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
                 rvrArray = metarInfo.getJSONArray("runway_visibility");
                 wxArray = metarInfo.getJSONArray("wx_codes");
                 cloudArray = metarInfo.getJSONArray("clouds");
+                remarks = metarInfo.getString("remarks");
+                temperature = temperatureObject.getString("value");
+                dewpoint = dewpointObject.getString("value");
+                altimeter = altimeterObject.getString("value");
+                visibilityUnits = unitsObject.getString("visibility");
+                altimeterUnits = unitsObject.getString("altimeter");
 
                 //check to see if windGustObject is not null to prevent error
                 if (windGustObject != null) {
@@ -206,19 +216,28 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
                 TextView rvrTextView = view.findViewById(R.id.rvrTextView);
                 TextView wxTextView = view.findViewById(R.id.wxTextView);
                 TextView cloudTextView = view.findViewById(R.id.cloudTextView);
+                TextView tempTextView = view.findViewById(R.id.tempTextView);
+                TextView altimeterTextView = view.findViewById(R.id.altimeterTextView);
+                TextView remarksTextView = view.findViewById(R.id.remarksTextView);
 
                 //Filling TextViews with API information
-                airportNameTextView.setText(icaoCode + " - " + airportName);
+                airportNameTextView.setText(icaoCode + " - " + airportName + "\n ");
                 metarTextView.setText(metar);
                 timeTextView.setText("Time: " + time +"\n ");
                 flightRuleTextView.setText("Flight Rules: " + flightRules + "\n ");
+                remarksTextView.setText("Remarks: \n" + remarks);
+                tempTextView.setText("Temperature: " + temperature + "°C \n" +
+                        "Dewpoint: " + dewpoint + "°C \n");
+                altimeterTextView.setText("Altimeter: " + altimeter + " "
+                        + altimeterUnits + " \n");
+
                 if (visibility.equals("CAVOK")) {
                     visibilityTextView.setText("CAVOK - Ceiling and Visibility OK\n" +
                             "Visibility greater than 10 km " +
                             "\nNo clouds of operational significance \n ");
                 }
                 else {
-                    visibilityTextView.setText("Visibility: " + visibility + " Statute Miles");
+                    visibilityTextView.setText("Visibility: " + visibility + " " + visibilityUnits);
                 }
 
 
@@ -303,8 +322,8 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
                     }
                     //print to cloudTextView:
                     cloudTextView.setText("Cloud Conditions: \n" + cloudText);
-
                 }
+
 
             }
             else {
