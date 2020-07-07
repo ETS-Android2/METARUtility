@@ -17,48 +17,57 @@
         android:layout_marginEnd="10dp"
         android:text="@android:string/search_go" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/SearchInputLayout"
-        android:layout_width="299dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/infoScroll"
-        android:layout_below="@+id/searchInput"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="-8dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:layout_toStartOf="@+id/metarSearchButton"
-        android:hint="ICAO Code">
 
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/searchInput"
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="71dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="7dp"
-        android:layout_marginEnd="130dp"
-        android:digits="abcdefghijklmnopqrstuvwxyz"
-        android:hint="ICAO Code"
-        android:maxLength="4"
-        android:textAllCaps="true"
-        android:textStyle="bold" />
+        android:layout_marginStart="-4dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="2dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/searchInput"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="130dp"
+            android:digits="abcdefghijklmnopqrstuvwxyz"
+            android:hint="ICAO Code"
+            android:maxLength="4"
+            android:textAllCaps="true"
+            android:textStyle="bold" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/SearchInputLayout"
+            android:layout_width="299dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="-8dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:hint="ICAO Code">
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
 
     <ScrollView
         android:id="@+id/infoScroll"
         android:layout_width="389dp"
         android:layout_height="649dp"
-        android:layout_below="@+id/searchInput"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="13dp"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="2dp">
 
@@ -78,7 +87,7 @@
             <TextView
                 android:id="@+id/metarTextView"
                 android:layout_width="match_parent"
-                android:layout_height="96dp"
+                android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />

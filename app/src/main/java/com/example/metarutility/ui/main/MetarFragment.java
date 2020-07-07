@@ -222,7 +222,7 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
 
                 //Filling TextViews with API information
                 airportNameTextView.setText(icaoCode + " - " + airportName + "\n ");
-                metarTextView.setText(metar);
+                metarTextView.setText(metar + "\n ");
                 timeTextView.setText("Time: " + time +"\n ");
                 flightRuleTextView.setText("Flight Rules: " + flightRules + "\n ");
                 remarksTextView.setText("Remarks: \n" + remarks);
@@ -268,7 +268,7 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
                     for (int i = 0; i < rvrArray.length(); i++){
                         rvrText = rvrText + (rvrArray.getString(i)) + "\n ";
                     }
-                    rvrTextView.setText("Runway Visual Range: " +  rvrText);
+                    rvrTextView.setText("Runway Visual Range: \n" +  rvrText);
                 }
 
                 //check if wxArray is empty
