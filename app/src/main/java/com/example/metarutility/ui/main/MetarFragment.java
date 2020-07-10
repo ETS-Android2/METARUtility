@@ -32,10 +32,6 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     View view;
     EditText inputText;
 
@@ -66,8 +62,9 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            // TODO: Rename and change types of parameters
+            String mParam1 = getArguments().getString(ARG_PARAM1);
+            String mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
     }
@@ -332,13 +329,7 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
 
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (IOException | JSONException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }
