@@ -9,8 +9,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static com.example.metarutility.utils.Constants.AVWX_API_KEY;
 
 public class MetarApi extends AsyncTask<String, Void, String> {
 
@@ -20,50 +23,48 @@ public class MetarApi extends AsyncTask<String, Void, String> {
      * for variable 'authToken'
      */
 
-    String authToken = "65H43GKqAoSvN89VGZ5WD-z26OpDn9PGCU3NMFHb3e4";
+    String authToken = AVWX_API_KEY;
 
     //Setting connection timeout to 15 seconds
     public static final String REQUEST_METHOD = "GET";
     public static final int READ_TIMEOUT = 15000;
     public static final int CONNECTION_TIMEOUT = 15000;
 
-    public JSONObject GetStationInfo(String station) throws IOException, JSONException, ExecutionException, InterruptedException {
+    public JSONObject GetStationInfo(String station) throws JSONException,
+            ExecutionException, InterruptedException {
         /*Pulling Airport information from API and formatting into a JSON String
          */
 
-        String stationInfo = null;
-        //format: https://avwx.rest/api/metar/KLAX?format=json&token=65H43GKqAoSvN89VGZ5WD-z26OpDn9PGCU3NMFHb3e4
-        String urlFormed = "https://avwx.rest/api/station/" + station + "?format=json&token=" + authToken;
+        String stationInfo;
+        //format: https://avwx.rest/api/metar/KLAX?format=json&token=[INSERT TOKEN]
+        String urlFormed = "https://avwx.rest/api/station/" + station
+                + "?format=json&token=" + authToken;
         stationInfo = new MetarApi().execute(urlFormed).get();
 
         //Convert String from AsyncTask background task to a JSONObject
         JSONObject stationJson = null;
         if (stationInfo != null) {
             stationJson = new JSONObject(stationInfo);
-        }
-        else {
-            stationJson = null;
         }
 
         return stationJson;
     }
 
-    public JSONObject GetMetarInfo(String station) throws IOException, JSONException, ExecutionException, InterruptedException {
+    public JSONObject GetMetarInfo(String station) throws JSONException,
+            ExecutionException, InterruptedException {
         /*GET METAR information from API and formatting into a JSON Object
          */
 
         String stationInfo = null;
-        //format: https://avwx.rest/api/metar/KLAX?format=json&token=65H43GKqAoSvN89VGZ5WD-z26OpDn9PGCU3NMFHb3e4
-        String urlFormed = "https://avwx.rest/api/metar/" + station + "?format=json&token=" + authToken;
+        //format: https://avwx.rest/api/metar/KLAX?format=json&token=[INSERT TOKEN]
+        String urlFormed = "https://avwx.rest/api/metar/" + station +
+                "?format=json&token=" + authToken;
         stationInfo = new MetarApi().execute(urlFormed).get();
 
         //Convert String from AsyncTask background task to a JSONObject
         JSONObject stationJson = null;
         if (stationInfo != null) {
             stationJson = new JSONObject(stationInfo);
-        }
-        else {
-            stationJson = null;
         }
 
         return stationJson;
@@ -80,9 +81,7 @@ public class MetarApi extends AsyncTask<String, Void, String> {
         try {
 
             URL getStationRequest = new URL(stringURL);
-
             HttpURLConnection connection = (HttpURLConnection) getStationRequest.openConnection();
-
             connection.setRequestMethod(REQUEST_METHOD);
             connection.setReadTimeout(READ_TIMEOUT);
             connection.setConnectTimeout(CONNECTION_TIMEOUT);
@@ -92,7 +91,7 @@ public class MetarApi extends AsyncTask<String, Void, String> {
             if (responseCode == HttpURLConnection.HTTP_OK) {
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(connection.getInputStream()));
-                StringBuffer response = new StringBuffer();
+                StringBuilder response = new StringBuilder();
                 while ((stationInfo = in.readLine()) != null) {
                     response.append(stationInfo);
                 } in .close();

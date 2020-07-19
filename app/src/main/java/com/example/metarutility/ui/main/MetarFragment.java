@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +19,12 @@ import org.json.JSONObject;
 
 import com.example.metarutility.R;
 
-import java.io.IOException;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import android.widget.TextView;
 
-public class MetarFragment<policy> extends Fragment implements View.OnClickListener {
+public class MetarFragment extends Fragment implements View.OnClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -37,24 +36,6 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
 
     public MetarFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MetarFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MetarFragment newInstance(String param1, String param2) {
-        MetarFragment fragment = new MetarFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -81,17 +62,15 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
         inputText = (EditText) view.findViewById(R.id.searchInput);
         return view;
 
-        /*default:
-        //return inflater.inflate(R.layout.fragment_metar, container, false);
-        */
     }
 
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) activity.getSystemService(
                         Activity.INPUT_METHOD_SERVICE);
+        assert inputMethodManager != null;
         inputMethodManager.hideSoftInputFromWindow(
-                activity.getCurrentFocus().getWindowToken(), 0);
+                Objects.requireNonNull(activity.getCurrentFocus()).getWindowToken(), 0);
     }
 
     @SuppressLint("SetTextI18n")
@@ -99,10 +78,7 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
     public void onClick(View v) {
 
         //hide keyboard upon button press
-        hideSoftKeyboard(getActivity());
-        
-        System.out.println("Button clicked");
-        Log.i("METARUtility", "Button Clicked");
+        hideSoftKeyboard(Objects.requireNonNull(getActivity()));
 
         //Get input from search text input
         String input = inputText.getText().toString();
@@ -168,8 +144,7 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
                 
                 //this JSONObject can be null. Must check if it is null
                 gustCheck = metarInfo.getString("wind_gust");
-
-                if (gustCheck == "null") {
+                if (gustCheck.equals("null")) {
                     gusts = null;
                 }
                 else {
@@ -243,11 +218,11 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
                     windInfoTextView.setText("Winds variable at " + windSpeed +
                             " knots. \nNo wind gusts.\n ");
                 }
-                else if (windDirection.equals("VRB") && gusts != null) {
+                else if (windDirection.equals("VRB")) {
                     windInfoTextView.setText("Winds variable at "
                             + windSpeed + " knots. \nGusts up to " + gusts + " knots.\n ");
                 }
-                else if (!windDirection.equals("VRB") && gusts == null) {
+                else if (gusts == null) {
                     windInfoTextView.setText("Winds at " + windSpeed +
                             " knots from " + windDirection + " degrees. \nNo wind gusts.\n ");
                 }
@@ -294,42 +269,46 @@ public class MetarFragment<policy> extends Fragment implements View.OnClickListe
                         cloudType = cloudObject.getString("type");
                         cloudHeight = cloudObject.getString("altitude");
 
-                        if (cloudType == "CLR") {
-                            cloudText = cloudText + "No clouds detected below 12000 feet \n";
+                        switch (cloudType) {
+                            case "CLR":
+                                cloudText = cloudText + "No clouds detected below 12000 feet \n";
+                                break;
+                            case "SCT":
+                                cloudText = cloudText + "Scattered clouds at "
+                                        + cloudHeight + "00 feet\n";
+                                break;
+                            case "FEW":
+                                cloudText = cloudText + "Few clouds at "
+                                        + cloudHeight + "00 feet\n";
+                                break;
+                            case "BKN":
+                                cloudText = cloudText + "Broken clouds at "
+                                        + cloudHeight + "00 feet\n";
+                                break;
+                            case "OVC":
+                                cloudText = cloudText + "Overcast at " + cloudHeight + "00 feet\n";
+                                break;
+                            case "VV":
+                                cloudText = cloudText + "Vertical Visibility at "
+                                        + cloudHeight + "00 feet\n";
+                                break;
                         }
-                        else if (cloudType.equals("SCT")) {
-                            cloudText = cloudText + "Scattered clouds at "
-                                    + cloudHeight + "00 feet\n";
-                        }
-                        else if (cloudType.equals("FEW")) {
-                            cloudText = cloudText + "Few clouds at " + cloudHeight + "00 feet\n";
-                        }
-                        else if (cloudType.equals("BKN")) {
-                            cloudText = cloudText + "Broken clouds at "
-                                    + cloudHeight + "00 feet\n";
-                        }
-                        else if (cloudType.equals("OVC")) {
-                            cloudText = cloudText + "Overcast at " + cloudHeight + "00 feet\n";
-                        }
-                        else if (cloudType.equals("VV")) {
-                            cloudText = cloudText + "Vertical Visibility at "
-                                    + cloudHeight + "00 feet\n";
-                        }
-
                     }
+
                     //print to cloudTextView:
                     cloudTextView.setText("Cloud Conditions: \n" + cloudText);
                 }
 
-
             }
             else {
+                //If API call results in a null JSONObject
+
                 System.out.println("ERROR bad ICAO Code");
-                airportNameTextView.setText("Error: ICAO Code is invalid. Please try again.");
+                airportNameTextView.setText("Error: ICAO Code is invalid. Please try again.\n");
 
             }
 
-        } catch (IOException | JSONException | InterruptedException | ExecutionException e) {
+        } catch (JSONException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }

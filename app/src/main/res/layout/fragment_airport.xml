@@ -2,10 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="300dp"
     tools:context=".ui.main.AirportFragment">
 
     <!-- TODO: Update blank fragment layout -->
+
     <Button
         android:id="@+id/airportSearchButton"
         android:layout_width="wrap_content"
@@ -35,8 +36,8 @@
             android:layout_marginStart="6dp"
             android:layout_marginTop="7dp"
             android:layout_marginEnd="130dp"
-            android:inputType="text|textNoSuggestions"
             android:hint="@string/icao_code"
+            android:inputType="text|textNoSuggestions"
             android:maxLength="4"
             android:textAllCaps="true"
             android:textStyle="bold" />
@@ -63,10 +64,74 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="80dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp">
+        android:layout_marginEnd="11dp"
+        android:layout_marginBottom="9dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/airportNameTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="300dp" />
+
+            <TextView
+                android:id="@+id/coordinatesTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <TextView
+                android:id="@+id/locationTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <TextView
+                android:id="@+id/elevationTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <TextView
+                android:id="@+id/airportTypeTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <TextView
+                android:id="@+id/runwayTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <TextView
+                android:id="@+id/websiteTextView"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <TextView
+                android:id="@+id/wikiTextView"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        </LinearLayout>
+
 
     </ScrollView>
 
