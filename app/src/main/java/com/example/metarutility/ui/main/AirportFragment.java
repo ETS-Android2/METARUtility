@@ -305,8 +305,7 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
 
             }
             else {
-                //If API call results in a null JSONObject
-
+                //If API call results in a null JSONObject:
                 System.out.println("ERROR bad ICAO Code");
                 airportNameTextView.setText("Error: ICAO Code is invalid. Please try again. \n");
             }
