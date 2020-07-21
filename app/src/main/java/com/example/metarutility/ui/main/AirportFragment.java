@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -125,7 +126,7 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
 
     }
 
-    public void setMapView(String latCoordinate, String longCoordinate) {
+    public void setMapView(String latCoordinate, String longCoordinate, String type) {
         //Setting camera view for MapView, set view to coordinates and sets zoom view
         String coordinates = latCoordinate + "," + longCoordinate;
         String[] latlong = coordinates.split(",");
@@ -133,6 +134,21 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
         double longitude = Double.parseDouble(latlong[1]);
 
         LatLng location = new LatLng(latitude, longitude);
+
+        switch(type) {
+
+            case ("small_airport"):
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, (float)14.9));
+                break;
+
+            case ("large_airport"):
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 12));
+                break;
+
+            case ("medium_airport"):
+            default:
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 13));
+        }
 
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 13));
     }
@@ -268,7 +284,7 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
                         (TextView) view.findViewById(R.id.runwayLabelTextView);
 
                 //Set map views
-                setMapView(latitude, longitude);
+                setMapView(latitude, longitude, airportType);
 
                 //Handling runway information parsing from JSONArray
                 runwayArray = stationInfo.getJSONArray("runways");
@@ -292,7 +308,8 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
                     runwayInfoLine += "Length: " + length + " feet\n";
                     runwayInfoLine += "Width: " + width + " feet.\n";
                     runwayInfoLine += "Surface Type: " + surface + "\n";
-                    if (lights == true) {
+
+                    if (lights) {
                         runwayInfoLine += "Lights: Yes\n";
                     }
                     else {
