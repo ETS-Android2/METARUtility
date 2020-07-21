@@ -31,6 +31,6 @@ The application has been published onto the Google Play Store.
 
 **Screenshots:**
 
-![alt text](https://i.imgur.com/qFMd2VD.jpg)
+![alt text](https://i.imgur.com/6PlRQJr.jpg)
 
 API Source: https://avwx.rest/
