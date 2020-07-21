@@ -7,4 +7,6 @@
     <string name="button_label_1">Search</string>
     <string name="icao_code">ICAO Code</string>
     <string name="runway_information">Runway Information</string>
+    <string name="standard_map">Standard Map</string>
+    <string name="satellite_map">Satellite Map</string>
 </resources>

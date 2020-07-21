@@ -13,8 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.example.metarutility.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -71,6 +73,21 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
         searchAirportButton.setOnClickListener(this);
         inputText = (EditText) view.findViewById(R.id.airportSearchInput);
 
+        //Setting up button to change between default and satellite view
+        ToggleButton mapToggle = (ToggleButton) view.findViewById(R.id.toggleButton);
+        mapToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    setSatelliteMap();
+                }
+                else {
+                    setStandardMap();
+                }
+            }
+        });
+
+
         mapView = (MapView) view.findViewById(R.id.mapView);
 
         initializeMap(savedInstanceState);
@@ -118,6 +135,14 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
         LatLng location = new LatLng(latitude, longitude);
 
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 13));
+    }
+
+    public void setStandardMap() {
+        map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+    }
+
+    public void setSatelliteMap() {
+        map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
     }
 
     @Override
