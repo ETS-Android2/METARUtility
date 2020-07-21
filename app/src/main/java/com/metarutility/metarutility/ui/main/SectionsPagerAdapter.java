@@ -1,4 +1,4 @@
-package com.example.metarutility.ui.main;
+package com.metarutility.metarutility.ui.main;
 
 import android.content.Context;
 
@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.metarutility.R;
+import com.metarutility.metarutility.R;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to

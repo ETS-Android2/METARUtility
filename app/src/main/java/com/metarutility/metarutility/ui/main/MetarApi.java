@@ -1,4 +1,4 @@
-package com.example.metarutility.ui.main;
+package com.metarutility.metarutility.ui.main;
 
 import android.os.AsyncTask;
 
@@ -13,7 +13,7 @@ import java.util.concurrent.ExecutionException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.example.metarutility.utils.Constants.AVWX_API_KEY;
+import static com.metarutility.metarutility.utils.Constants.AVWX_API_KEY;
 
 public class MetarApi extends AsyncTask<String, Void, String> {
 

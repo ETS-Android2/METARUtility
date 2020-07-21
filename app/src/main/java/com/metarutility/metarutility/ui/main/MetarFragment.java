@@ -1,4 +1,4 @@
-package com.example.metarutility.ui.main;
+package com.metarutility.metarutility.ui.main;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -17,7 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.metarutility.R;
+import com.metarutility.metarutility.R;
 
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;

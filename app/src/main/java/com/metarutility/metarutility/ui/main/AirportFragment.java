@@ -1,4 +1,4 @@
-package com.example.metarutility.ui.main;
+package com.metarutility.metarutility.ui.main;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -15,11 +15,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.example.metarutility.R;
+import com.metarutility.metarutility.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -33,7 +32,7 @@ import org.json.JSONObject;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
-import static com.example.metarutility.utils.Constants.MAPVIEW_BUNDLE_KEY;
+import static com.metarutility.metarutility.utils.Constants.MAPVIEW_BUNDLE_KEY;
 
 /**
  * A simple {@link Fragment} subclass.
