@@ -37,6 +37,7 @@ public class MetarApi extends AsyncTask<String, Void, String> {
 
         String stationInfo;
         //format: https://avwx.rest/api/metar/KLAX?format=json&token=[INSERT TOKEN]
+
         String urlFormed = "https://avwx.rest/api/station/" + station
                 + "?format=json&token=" + authToken;
         stationInfo = new MetarApi().execute(urlFormed).get();

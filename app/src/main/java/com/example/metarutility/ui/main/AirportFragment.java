@@ -39,7 +39,6 @@ import static com.example.metarutility.utils.Constants.MAPVIEW_BUNDLE_KEY;
  */
 public class AirportFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener {
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -58,7 +57,6 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            // TODO: Rename and change types of parameters
             String mParam1 = getArguments().getString(ARG_PARAM1);
             String mParam2 = getArguments().getString(ARG_PARAM2);
         }
@@ -88,8 +86,7 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
         inputMethodManager.hideSoftInputFromWindow(
                 Objects.requireNonNull(activity.getCurrentFocus()).getWindowToken(), 0);
     }
-    
-    // TODO: Rename and change types and number of parameters
+
     public static AirportFragment newInstance(String param1, String param2) {
         AirportFragment fragment = new AirportFragment();
         Bundle args = new Bundle();
@@ -100,9 +97,6 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
     }
 
     private void initializeMap(Bundle savedInstanceState) {
-        // *** IMPORTANT ***
-        // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
-        // objects or sub-Bundles.
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
@@ -115,7 +109,7 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
     }
 
     public void setMapView(String latCoordinate, String longCoordinate) {
-        //Setting camera view for MapView
+        //Setting camera view for MapView, set view to coordinates and sets zoom view
         String coordinates = latCoordinate + "," + longCoordinate;
         String[] latlong = coordinates.split(",");
         double latitude = Double.parseDouble(latlong[0]);
@@ -125,7 +119,6 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
 
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 13));
     }
-
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -176,29 +169,25 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
         mapView.onLowMemory();
     }
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         map = googleMap;
-
     }
 
     @SuppressLint("SetTextI18n")
     @Override
     public void onClick(View v) {
-        hideSoftKeyboard(Objects.requireNonNull(getActivity()));
 
-        //hide keyboard upon button press
+        //hides keyboard upon button press
         hideSoftKeyboard(Objects.requireNonNull(getActivity()));
 
         //Get input from search text input
         String input = inputText.getText().toString();
+        String uppercase = input.toUpperCase();
+        inputText.setText(uppercase, TextView.BufferType.EDITABLE);
 
         JSONObject stationInfo;
         MetarApi apiCall = new MetarApi();
-
-
 
         try {
             stationInfo = apiCall.GetStationInfo(input);
@@ -237,6 +226,7 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
                 airportType = stationInfo.getString("type");
                 website = stationInfo.getString("website");
                 wiki = stationInfo.getString("wiki");
+                notes = stationInfo.getString("note");
 
                 //Setting up TextViews
                 TextView coordinatesTextView = (TextView)
@@ -248,11 +238,14 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
                 TextView wikiTextView = (TextView) view.findViewById(R.id.wikiTextView);
                 TextView airportTypeTextView =
                         (TextView) view.findViewById(R.id.airportTypeTextView);
+                TextView notesTextView = (TextView) view.findViewById(R.id.notesTextView);
+                TextView runwayLabelTextView =
+                        (TextView) view.findViewById(R.id.runwayLabelTextView);
 
                 //Set map views
                 setMapView(latitude, longitude);
 
-                //handling runway parsing
+                //Handling runway information parsing from JSONArray
                 runwayArray = stationInfo.getJSONArray("runways");
                 String length;
                 String width;
@@ -293,15 +286,41 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
 
                 //Filling TextViews with API information
                 airportNameTextView.setText(icaoCode + " - " + airportName + "\n ");
-                coordinatesTextView.setText("\nCoordinates: " + latitude + longitude + "\n");
-                locationTextView.setText("City: " + city + ", " + country + "\n");
-                elevationTextView.setText("Elevation: " + elevationFeet + " feet, "
-                        + elevationMeters + " meters \n");
-                runwayTextView.setText("Runway Information: \n \n" + runways);
+                coordinatesTextView.setText("\nCoordinates: " + latitude + ", " + longitude);
+                locationTextView.setText("City: " + city + ", " + country);
+                elevationTextView.setText("Elevation: " + elevationFeet + " feet / "
+                        + elevationMeters + " meters");
+                runwayTextView.setText(runways);
                 websiteTextView.setText(Html.fromHtml(airportLinkText));
                 websiteTextView.setMovementMethod(LinkMovementMethod.getInstance());
                 wikiTextView.setText(Html.fromHtml(wikiLinkText));
                 wikiTextView.setMovementMethod(LinkMovementMethod.getInstance());
+                runwayLabelTextView.setText("\nRunway Information");
+
+                if (!notes.equals("null")) {
+                    notesTextView.setText("Notes: " + notes + "\n");
+                }
+                else {
+                    notesTextView.setText("");
+                }
+
+                //Airport Type Parsing
+                switch (airportType) {
+                    case ("small_airport"):
+                        airportTypeTextView.setText("Airport Type: Small Airport");
+                        break;
+
+                    case ("medium_airport"):
+                        airportTypeTextView.setText("Airport Type: Mid-Size Airport");
+                        break;
+
+                    case ( "large_airport"):
+                        airportTypeTextView.setText("Airport Type: Large Airport");
+                        break;
+
+                    default:
+                        airportTypeTextView.setText("");
+                }
 
             }
             else {

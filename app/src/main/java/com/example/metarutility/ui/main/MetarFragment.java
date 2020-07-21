@@ -26,7 +26,6 @@ import android.widget.TextView;
 
 public class MetarFragment extends Fragment implements View.OnClickListener {
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -43,7 +42,6 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            // TODO: Rename and change types of parameters
             String mParam1 = getArguments().getString(ARG_PARAM1);
             String mParam2 = getArguments().getString(ARG_PARAM2);
         }
@@ -76,12 +74,14 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
     @SuppressLint("SetTextI18n")
     @Override
     public void onClick(View v) {
-
         //hide keyboard upon button press
         hideSoftKeyboard(Objects.requireNonNull(getActivity()));
 
         //Get input from search text input
         String input = inputText.getText().toString();
+
+        String uppercase = input.toUpperCase();
+        inputText.setText(uppercase, TextView.BufferType.EDITABLE);
 
         JSONObject metarInfo;
         JSONObject stationInfo;
@@ -154,7 +154,7 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
                 //Setting variable values from API
                 icaoCode = metarInfo.getString("station");
                 airportName = stationInfo.getString("name");
-                metar = metarInfo.getString("sanitized");
+                metar = metarInfo.getString("raw");
                 time = timeObject.getString("dt");
                 flightRules = metarInfo.getString("flight_rules");
                 windSpeed = windSpeedObject.getString("repr");
@@ -178,6 +178,15 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
                     gusts = null;
                 }
 
+                //setting up Category Labels
+                TextView windLabelTextView = view.findViewById(R.id.windLabelTextView);
+                TextView visibilityLabelTextView = view.findViewById(R.id.visibilityLabelTextView);
+                TextView weatherLabelTextView = view.findViewById(R.id.weatherLabelTextView);
+                TextView cloudLabelTextView = view.findViewById(R.id.cloudLabelTextView);
+                TextView tempLabelTextView = view.findViewById(R.id.tempLabelTextView);
+                TextView altimeterLabelTextView = view.findViewById(R.id.altimeterLabelTextView);
+                TextView remarksLabelTextView = view.findViewById(R.id.remarksLabelTextView);
+
                 //Setting up TextViews
                 TextView metarTextView = view.findViewById(R.id.metarTextView);
                 TextView timeTextView = view.findViewById(R.id.timeTextView);
@@ -192,13 +201,22 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
                 TextView altimeterTextView = view.findViewById(R.id.altimeterTextView);
                 TextView remarksTextView = view.findViewById(R.id.remarksTextView);
 
+                //Filling Category Labels
+                windLabelTextView.setText("Wind");
+                visibilityLabelTextView.setText("Visibility");
+                weatherLabelTextView.setText("Weather");
+                cloudLabelTextView.setText("Cloud Conditions");
+                tempLabelTextView.setText("Temperature");
+                altimeterLabelTextView.setText("Altimeter");
+                remarksLabelTextView.setText("Remarks");
+
                 //Filling TextViews with API information
                 airportNameTextView.setText(icaoCode + " - " + airportName + "\n ");
                 metarTextView.setText(metar + "\n ");
                 timeTextView.setText("Time: " + time +"\n ");
                 flightRuleTextView.setText("Flight Rules: " + flightRules + "\n ");
-                remarksTextView.setText("Remarks: \n" + remarks);
-                tempTextView.setText("Temperature: " + temperature + "°C \n" +
+                remarksTextView.setText(remarks + "\n");
+                tempTextView.setText("Temperature: " + temperature + "°C \n \n" +
                         "Dewpoint: " + dewpoint + "°C \n");
                 altimeterTextView.setText("Altimeter: " + altimeter + " "
                         + altimeterUnits + " \n");
@@ -209,27 +227,28 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
                             "\nNo clouds of operational significance \n ");
                 }
                 else {
-                    visibilityTextView.setText("Visibility: " + visibility + " " + visibilityUnits);
+                    visibilityTextView.setText("Visibility: "
+                            + visibility + " " + visibilityUnits + "\n");
                 }
 
 
                 //Formatting Wind Conditions in text view
                 if (windDirection.equals("VRB") && gusts == null) {
                     windInfoTextView.setText("Winds variable at " + windSpeed +
-                            " knots. \nNo wind gusts.\n ");
+                            " knots. \n \nNo wind gusts.\n ");
                 }
                 else if (windDirection.equals("VRB")) {
                     windInfoTextView.setText("Winds variable at "
-                            + windSpeed + " knots. \nGusts up to " + gusts + " knots.\n ");
+                            + windSpeed + " knots.\n \nGusts up to " + gusts + " knots.\n ");
                 }
                 else if (gusts == null) {
                     windInfoTextView.setText("Winds at " + windSpeed +
-                            " knots from " + windDirection + " degrees. \nNo wind gusts.\n ");
+                            " knots from " + windDirection + " degrees. \n \nNo wind gusts.\n ");
                 }
                 else {
                     windInfoTextView.setText("Winds at " + windSpeed +
                             " knots from " + windDirection
-                            + " degrees. \nGusts up to " + gusts + " knots.\n ");
+                            + " degrees. \n \nGusts up to " + gusts + " knots.\n ");
                 }
 
                 //check if RVR is empty.
@@ -258,9 +277,27 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
                     wxTextView.setText("Weather Conditions: \n" + wxText);
                 }
 
+                //Check if automated weather report
+                String[] metarArray = metar.split(" ");
+                boolean automated = false;
+
+                for (int i = 0; i < metarArray.length; i++) {
+                    if (metarArray[i].equals("AUTO")) {
+                        automated = true;
+                        break;
+                    }
+                }
+
+                if (automated) {
+                    reportModifierTextView.setText("Fully Automated Report: Yes\n");
+                }
+                else {
+                    reportModifierTextView.setText("Fully Automated Report: No\n");
+                }
+
                 //check if cloudArray is empty
                 if (cloudArray.length() == 0) {
-                    cloudTextView.setText("No Clouds Reported");
+                    cloudTextView.setText("No Clouds Reported \n");
                 }
                 else {
                     JSONObject cloudObject;
@@ -296,13 +333,12 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
                     }
 
                     //print to cloudTextView:
-                    cloudTextView.setText("Cloud Conditions: \n" + cloudText);
+                    cloudTextView.setText(cloudText);
                 }
 
             }
             else {
                 //If API call results in a null JSONObject
-
                 System.out.println("ERROR bad ICAO Code");
                 airportNameTextView.setText("Error: ICAO Code is invalid. Please try again.\n");
 

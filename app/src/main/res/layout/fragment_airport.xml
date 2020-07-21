@@ -113,6 +113,14 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <TextView
+                android:id="@+id/runwayLabelTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@android:color/black"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/runwayTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -128,6 +136,12 @@
                 android:id="@+id/wikiTextView"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <TextView
+                android:id="@+id/notesTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         </LinearLayout>

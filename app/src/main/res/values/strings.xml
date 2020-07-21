@@ -6,4 +6,5 @@
     <string name="metar_info">METAR Info</string>
     <string name="button_label_1">Search</string>
     <string name="icao_code">ICAO Code</string>
+    <string name="runway_information">Runway Information</string>
 </resources>
