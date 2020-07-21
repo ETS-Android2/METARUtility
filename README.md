@@ -1,4 +1,4 @@
-![logo](https://i.imgur.com/KL2521o.png)
+![logo](https://i.imgur.com/8CxiWL5.jpg)
 
 # METAR Utility
 METAR Utility is an Android Application that reports Meteorological Aerodrome Reports from an API and displays it to a user via a graphical user interface. This application is intended to help pilots decipher complicated METAR reports into a human readable format, and also provide relevant airport information.
