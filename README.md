@@ -1,4 +1,4 @@
-# METARUtility
+# METAR Utility
 METAR Utility is an Android Application that reports Meteorological Aerodrome Reports from an API and displays it to a user via a graphical user interface. This application is intended to help pilots decipher complicated METAR reports into a human readable format, and also provide relevant airport information.
 
 This application queries the user for a 4-letter ICAO code, then performs a GET request to the AVWX API to retrieve real-time METAR information and airport information to display it to the user. The data is from the open source AVWX REST API for Aviation Weather.
