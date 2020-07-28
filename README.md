@@ -29,7 +29,7 @@ The application provides the following data to aviators:
     - Surface Type
     - Lighting Information
     
-The application has been published onto the Google Play Store.
+The application has been [published onto the Google Play Store](https://play.google.com/store/apps/details?id=com.metarutility.metarutility).
 
 **Screenshots:**
 
