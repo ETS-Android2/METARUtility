@@ -74,14 +74,19 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
     @SuppressLint("SetTextI18n")
     @Override
     public void onClick(View v) {
-        //hide keyboard upon button press
-        hideSoftKeyboard(Objects.requireNonNull(getActivity()));
 
         //Get input from search text input
         String input = inputText.getText().toString();
 
-        String uppercase = input.toUpperCase();
-        inputText.setText(uppercase, TextView.BufferType.EDITABLE);
+        //Check if input is empty to prevent crash
+        if (input.equals("")) {
+            return;
+        }
+
+        //hide keyboard upon button press
+        hideSoftKeyboard(Objects.requireNonNull(getActivity()));
+
+        inputText.setText("", TextView.BufferType.EDITABLE);
 
         JSONObject metarInfo;
         JSONObject stationInfo;
@@ -339,7 +344,6 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
             }
             else {
                 //If API call results in a null JSONObject
-                System.out.println("ERROR bad ICAO Code");
                 airportNameTextView.setText("Error: ICAO Code is invalid. Please try again.\n");
 
             }

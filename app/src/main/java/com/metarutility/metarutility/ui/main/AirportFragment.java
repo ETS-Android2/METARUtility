@@ -218,13 +218,18 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
     @Override
     public void onClick(View v) {
 
+        //Get input from search text input
+        String input = inputText.getText().toString();
+
+        //Check if input is empty to prevent crash
+        if (input.equals("")) {
+            return;
+        }
+
         //hides keyboard upon button press
         hideSoftKeyboard(Objects.requireNonNull(getActivity()));
 
-        //Get input from search text input
-        String input = inputText.getText().toString();
-        String uppercase = input.toUpperCase();
-        inputText.setText(uppercase, TextView.BufferType.EDITABLE);
+        inputText.setText("", TextView.BufferType.EDITABLE);
 
         JSONObject stationInfo;
         MetarApi apiCall = new MetarApi();
@@ -366,8 +371,8 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
             }
             else {
                 //If API call results in a null JSONObject:
-                System.out.println("ERROR bad ICAO Code");
                 airportNameTextView.setText("Error: ICAO Code is invalid. Please try again. \n");
+
             }
 
         } catch (JSONException | ExecutionException | InterruptedException e) {
