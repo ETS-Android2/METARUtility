@@ -231,6 +231,12 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
                             "Visibility greater than 10 km " +
                             "\nNo clouds of operational significance \n ");
                 }
+                else if (visibility.equals("9999")) {
+                    visibilityTextView.setText("Visibility is greater than 10 km\n");
+                }
+                else if (visibility.equals("0000")){
+                    visibilityTextView.setText("Visibility is less than 50 meters\n");
+                }
                 else {
                     visibilityTextView.setText("Visibility: "
                             + visibility + " " + visibilityUnits + "\n");
