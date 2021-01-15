@@ -40,12 +40,10 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             String mParam1 = getArguments().getString(ARG_PARAM1);
             String mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
     }
 
     @Override
@@ -56,10 +54,8 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
         view = inflater.inflate(R.layout.fragment_metar, container, false);
         Button searchMetarButton = (Button) view.findViewById(R.id.metarSearchButton);
         searchMetarButton.setOnClickListener(this);
-
         inputText = (EditText) view.findViewById(R.id.searchInput);
         return view;
-
     }
 
     public static void hideSoftKeyboard(Activity activity) {
@@ -74,7 +70,6 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
     @SuppressLint("SetTextI18n")
     @Override
     public void onClick(View v) {
-
         //Get input from search text input
         String input = inputText.getText().toString();
 
@@ -85,7 +80,6 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
 
         //hide keyboard upon button press
         hideSoftKeyboard(Objects.requireNonNull(getActivity()));
-
         inputText.setText("", TextView.BufferType.EDITABLE);
 
         JSONObject metarInfo;
@@ -242,7 +236,6 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
                             + visibility + " " + visibilityUnits + "\n");
                 }
 
-
                 //Formatting Wind Conditions in text view
                 if (windDirection.equals("VRB") && gusts == null) {
                     windInfoTextView.setText("Winds variable at " + windSpeed +
@@ -351,7 +344,6 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
             else {
                 //If API call results in a null JSONObject
                 airportNameTextView.setText("Error: ICAO Code is invalid. Please try again.\n");
-
             }
 
         } catch (JSONException | InterruptedException | ExecutionException e) {
