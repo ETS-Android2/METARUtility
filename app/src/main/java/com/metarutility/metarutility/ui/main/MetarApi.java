@@ -36,7 +36,7 @@ public class MetarApi extends AsyncTask<String, Void, String> {
          */
 
         String stationInfo;
-        //format: https://avwx.rest/api/metar/KLAX?format=json&token=[INSERT TOKEN]
+        //format: https://avwx.rest/api/metar/KLAX?format=json&token=[INSERT TOKEN HERE]
 
         String urlFormed = "https://avwx.rest/api/station/" + station
                 + "?format=json&token=" + authToken;
@@ -55,7 +55,6 @@ public class MetarApi extends AsyncTask<String, Void, String> {
             ExecutionException, InterruptedException {
         /*GET METAR information from API and formatting into a JSON Object
          */
-
         String stationInfo = null;
         //format: https://avwx.rest/api/metar/KLAX?format=json&token=[INSERT TOKEN]
         String urlFormed = "https://avwx.rest/api/metar/" + station +
@@ -80,7 +79,6 @@ public class MetarApi extends AsyncTask<String, Void, String> {
         String stringURL = params[0];
         String stationInfo = null;
         try {
-
             URL getStationRequest = new URL(stringURL);
             HttpURLConnection connection = (HttpURLConnection) getStationRequest.openConnection();
             connection.setRequestMethod(REQUEST_METHOD);

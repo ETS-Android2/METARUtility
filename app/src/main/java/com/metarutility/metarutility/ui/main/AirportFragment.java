@@ -73,7 +73,7 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
         searchAirportButton.setOnClickListener(this);
         inputText = (EditText) view.findViewById(R.id.airportSearchInput);
 
-        //Setting up button to change between default and satellite view
+        //Setting up button to change between default view and satellite view
         ToggleButton mapToggle = (ToggleButton) view.findViewById(R.id.toggleButton);
         mapToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -87,9 +87,7 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
             }
         });
 
-
         mapView = (MapView) view.findViewById(R.id.mapView);
-
         initializeMap(savedInstanceState);
 
         return view;
@@ -120,9 +118,7 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
         }
 
         mapView.onCreate(mapViewBundle);
-
         mapView.getMapAsync(this);
-
     }
 
     public void setMapView(String latCoordinate, String longCoordinate, String type) {
@@ -131,9 +127,7 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
         String[] latlong = coordinates.split(",");
         double latitude = Double.parseDouble(latlong[0]);
         double longitude = Double.parseDouble(latlong[1]);
-
         LatLng location = new LatLng(latitude, longitude);
-
         switch(type) {
 
             case ("small_airport"):
@@ -148,14 +142,12 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
             default:
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 13));
         }
-
         map.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 13));
     }
 
     public void setStandardMap() {
         map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
-
     public void setSatelliteMap() {
         map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
     }
@@ -163,13 +155,11 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         Bundle mapViewBundle = outState.getBundle(MAPVIEW_BUNDLE_KEY);
         if (mapViewBundle == null) {
             mapViewBundle = new Bundle();
             outState.putBundle(MAPVIEW_BUNDLE_KEY, mapViewBundle);
         }
-
         mapView.onSaveInstanceState(mapViewBundle);
     }
 
@@ -228,7 +218,6 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
 
         //hides keyboard upon button press
         hideSoftKeyboard(Objects.requireNonNull(getActivity()));
-
         inputText.setText("", TextView.BufferType.EDITABLE);
 
         JSONObject stationInfo;
@@ -236,7 +225,6 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
 
         try {
             stationInfo = apiCall.GetStationInfo(input);
-
             TextView airportNameTextView = (TextView) view.findViewById(R.id.airportNameTextView);
 
             //Setting up variables to load into TextView later
@@ -259,7 +247,6 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
 
             //Check if API call is successful
             if (stationInfo != null) {
-
                 icaoCode = stationInfo.getString("icao");
                 airportName = stationInfo.getString("name");
                 latitude = stationInfo.getString("latitude");
@@ -372,12 +359,10 @@ public class AirportFragment extends Fragment implements OnMapReadyCallback, Vie
             else {
                 //If API call results in a null JSONObject:
                 airportNameTextView.setText("Error: ICAO Code is invalid. Please try again. \n");
-
             }
 
         } catch (JSONException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
-
     }
 }
