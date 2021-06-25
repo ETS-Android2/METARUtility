@@ -221,9 +221,9 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
                 flightRuleTextView.setText("Flight Rules: " + flightRules + "\n ");
                 remarksTextView.setText(remarks + "\n");
                 tempTextView.setText("Temperature: " + temperature + "°C ("
-                        + String.format("%.2f", fahrenheitTemp) + "°F) \n \n" +
+                        + String.format("%.1f", fahrenheitTemp) + "°F) \n \n" +
                         "Dewpoint: " + dewpoint + "°C (" +
-                        String.format("%.2f", fahrenheitDewpoint) + "°F) \n");
+                        String.format("%.1f", fahrenheitDewpoint) + "°F) \n");
                 altimeterTextView.setText("Altimeter: " + altimeter + " "
                         + altimeterUnits + " \n");
 
