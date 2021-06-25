@@ -169,6 +169,11 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
                 visibilityUnits = unitsObject.getString("visibility");
                 altimeterUnits = unitsObject.getString("altimeter");
 
+                int temperatureInt = Integer.parseInt(temperature);
+                double fahrenheitTemp = (temperatureInt * 1.8) + 32;
+                int dewpointInt = Integer.parseInt(dewpoint);
+                double fahrenheitDewpoint = (dewpointInt * 1.8) + 32;
+
                 //check to see if windGustObject is not null to prevent error
                 if (windGustObject != null) {
                     gusts = windGustObject.getString("repr");
@@ -215,8 +220,10 @@ public class MetarFragment extends Fragment implements View.OnClickListener {
                 timeTextView.setText("Time: " + time +"\n ");
                 flightRuleTextView.setText("Flight Rules: " + flightRules + "\n ");
                 remarksTextView.setText(remarks + "\n");
-                tempTextView.setText("Temperature: " + temperature + "°C \n \n" +
-                        "Dewpoint: " + dewpoint + "°C \n");
+                tempTextView.setText("Temperature: " + temperature + "°C ("
+                        + String.format("%.2f", fahrenheitTemp) + "°F) \n \n" +
+                        "Dewpoint: " + dewpoint + "°C (" +
+                        String.format("%.2f", fahrenheitDewpoint) + "°F) \n");
                 altimeterTextView.setText("Altimeter: " + altimeter + " "
                         + altimeterUnits + " \n");
 
